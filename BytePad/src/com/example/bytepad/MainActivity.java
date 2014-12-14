@@ -8,27 +8,34 @@ import java.net.HttpRetryException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.DownloadManager;
 import android.app.ListActivity;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -46,6 +53,7 @@ public class MainActivity extends ListActivity {
 	JSONObject obj;
 	ListView list;
 	String data, url;
+	ImageView image;
 
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
@@ -68,6 +76,7 @@ public class MainActivity extends ListActivity {
 		find = (EditText) findViewById(R.id.search);
 		list = (ListView) findViewById(android.R.id.list);
 		searchText = find.getText().toString();
+		image = (ImageView) findViewById(R.id.image);
 		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
 				this, R.array.category,
 				R.layout.support_simple_spinner_dropdown_item);
@@ -114,31 +123,54 @@ public class MainActivity extends ListActivity {
 		});
 	}
 
+	@SuppressWarnings("deprecation")
 	public void clicked(View view) throws HttpRetryException {
+
+		image.setVisibility(4);
+		image.setImageResource(R.drawable.notfound);
 		click_status = 1;
 		try {
 			j = 0;
 			k = 0;
-			new getData().execute(url);
+			if (connectivity() == false) {
+				Log.d("error", "connectivity");
+				AlertDialog alertDialog = new AlertDialog.Builder(this)
+						.create();
+				alertDialog.setTitle("Not Connected To Internet");
+				alertDialog.setMessage("Internet connection is required");
+				alertDialog.setIcon(R.drawable.error);
+				alertDialog.setButton("OK",
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog,
+									int which) {
+							}
+						});
+				alertDialog.show();
+			} else
+				new getData().execute(url);
 		} catch (Exception e) {
 			e.printStackTrace();
 			Log.e("Log log", "Could not create object" + e.toString());
 		}
 	}
 
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
-	}
+	public boolean connectivity() {
+		Log.e("Log log", "Connectivity()");
+		ConnectivityManager conn = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+		NetworkInfo wifi = conn.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+		NetworkInfo dataPack = conn
+				.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+		if (wifi != null && dataPack != null) {
+			if (wifi.isConnectedOrConnecting() && wifi.isAvailable())
+				return true;
+			else if (dataPack.isConnectedOrConnecting()
+					&& dataPack.isAvailable())
+				return true;
+			else
+				return false;
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		int id = item.getItemId();
-		if (id == R.id.action_settings) {
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
+		} else
+			return false;
 	}
 
 	public void StartDownload(int pos) {
@@ -169,8 +201,13 @@ public class MainActivity extends ListActivity {
 
 	@SuppressLint("DefaultLocale")
 	public class getData extends AsyncTask<String, Integer, String> {
-		ArrayList<String> items = new ArrayList<String>();
-		ArrayAdapter<String> itemsView;
+		// ArrayList<String> items = new ArrayList<String>();
+		// ArrayAdapter<String> itemsView;
+		List<HashMap<String, String>> items = new ArrayList<HashMap<String, String>>();
+		SimpleAdapter itemsView;
+		int img = R.drawable.word;
+		String from[] = { "byt", "tv" };
+		int to[] = { R.id.byt, R.id.tv };
 
 		@Override
 		protected String doInBackground(String... params) {
@@ -195,7 +232,8 @@ public class MainActivity extends ListActivity {
 		@Override
 		protected void onPostExecute(String data) {
 			// TODO Auto-generated method stub
-
+			HashMap<String, String> hm = null;
+			int error_status = 1;
 			try {
 				JSONArray get = new JSONArray(data);
 				int l = get.length();
@@ -208,24 +246,30 @@ public class MainActivity extends ListActivity {
 						if (array[j].substring(i, i + f.length()).equals(f)) {
 							String info = obj.getString("Title") + "\n"
 									+ obj.getString("Size");
-							items.add(info);
+							hm = new HashMap<String, String>();
+							hm.put("byt", (Integer.toString(img)));
+							hm.put("tv", info);
+							items.add(hm);
 							paper_title[k] = obj.getString("Title");
 							paper_url[k++] = obj.getString("URL");
 							i = array[j].length();
+							error_status = 0;
 						}
 					}
 					j++;
 				}
+				if (error_status == 1)
+					image.setVisibility(0);
+				else
+					image.setVisibility(4);
 
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
-			itemsView = new ArrayAdapter<String>(MainActivity.this,
-					android.R.layout.simple_list_item_1, items);
+			itemsView = new SimpleAdapter(getBaseContext(), items,
+					R.layout.disp, from, to);
 			list.setAdapter(itemsView);
-
 			list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
 				@Override

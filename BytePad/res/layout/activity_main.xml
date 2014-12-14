@@ -3,51 +3,60 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:weightSum="13"
     tools:context="com.example.bytepad.MainActivity" >
- 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal" >
 
-        <EditText
-            android:id="@+id/search"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:hint="Enter subject name..... " />
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="12"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="60dp"
+            android:orientation="horizontal"
+            android:weightSum="5" >
+
+            <EditText
+                android:id="@+id/search"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="0.5"
+                android:hint="Enter subject name or code" />
+
+            <Spinner
+                android:id="@+id/spin"
+                android:layout_width="124dp"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true" />
+        </LinearLayout>
 
         <Button
             android:id="@+id/sear"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="clicked"
-            android:text="search" />
+            android:text="Search Me" />
 
-        <Spinner
-            android:id="@+id/spin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:adjustViewBounds="true" />
-        </LinearLayout>
-<!--      
-    </LinearLayout>
+        <ListView
+            android:id="@android:id/list"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
+        </ListView>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical" >
-
-        <ScrollView
+        <ImageView
+            android:id="@+id/image"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scrollbars="horizontal" >
--->
-            <ListView
-                android:id="@android:id/list"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
-            </ListView>
-   <!--       </ScrollView>
+            android:layout_height="wrap_content"
+            android:src="@drawable/bytepad" />
     </LinearLayout>
--->
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:src="@drawable/footer" />
+
 </LinearLayout>

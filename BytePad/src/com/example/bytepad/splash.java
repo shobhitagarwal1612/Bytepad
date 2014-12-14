@@ -21,7 +21,6 @@ public class splash extends Activity {
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				} finally {
-
 					Intent openCounter = new Intent(
 							"com.example.bytepad.MAINACTIVITY");
 					startActivity(openCounter);
@@ -35,7 +34,6 @@ public class splash extends Activity {
 	protected void onPause() {
 		// TODO Auto-generated method stub
 		super.onPause();
-
 		finish();
 	}
 
