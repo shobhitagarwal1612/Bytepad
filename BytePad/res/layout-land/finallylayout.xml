@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/animateLayout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:animateLayoutChanges="false"
+    android:background="#ffffff"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/ll"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@+id/img"
+        android:layout_below="@+id/inside2" >
+
+        <RelativeLayout
+            android:id="@+id/inside"
+            android:layout_width="400dp"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:weightSum="4" >
+
+            <EditText
+                android:id="@+id/edit_text"
+                android:layout_width="350dp"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginBottom="2dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="2dp"
+                android:layout_weight="2"
+                android:textColor="#797979"
+                android:hint="Enter subject name or code"
+                android:textColorHint="#797979" />
+
+            <Button
+                android:id="@+id/btn1"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_alignParentEnd="true"
+                android:layout_toEndOf="@id/edit_text"
+                android:background="@drawable/search"
+                android:onClick="clicked" />
+        </RelativeLayout>
+<TextView 
+    android:layout_marginLeft="50dp"
+    android:layout_marginRight="50dp"
+    android:layout_below="@+id/inside"
+    android:layout_width="fill_parent"
+    android:padding="20dp"
+    android:id="@+id/pupna"
+    android:layout_height="wrap_content"
+    android:text="PUT 2013 Papers are now availabale"
+    android:background="#FFF0FA"
+    />
+        <ListView
+            android:id="@android:id/list"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/inside"
+            android:animateLayoutChanges="true"
+            android:visibility="gone" >
+        </ListView>
+
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/inside"
+            android:contentDescription="@string/content"
+            android:src="@drawable/notfound"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/img"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:contentDescription="@string/content"
+        android:src="@drawable/footer"
+        android:visibility="gone" />
+
+</RelativeLayout>
